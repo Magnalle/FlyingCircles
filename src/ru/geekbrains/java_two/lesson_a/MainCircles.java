@@ -3,13 +3,16 @@ package ru.geekbrains.java_two.lesson_a;
 import javax.swing.*;
 import java.awt.*;
 
+
 public class MainCircles extends JFrame {
     private static final int POS_X = 400;
     private static final int POS_Y = 200;
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
+    private static final int MAX_SPRITES = 20;
+    private int currentSprites;
 
-    Sprite[] sprites = new Sprite[10];
+    Sprite[] sprites = new Sprite[MAX_SPRITES];
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -31,9 +34,24 @@ public class MainCircles extends JFrame {
     }
 
     private void initApplication() {
-        for (int i = 0; i < sprites.length; i++) {
+        currentSprites = 10;
+        for (int i = 0; i < currentSprites; i++) {
             sprites[i] = new Ball();
         }
+    }
+
+    public void addSprite(){
+        if(currentSprites == MAX_SPRITES)
+            System.out.println("Max sprites count reached!");
+        else
+            sprites[currentSprites++] = new Ball();
+    }
+
+    public void deleteSprite(){
+        if(currentSprites == 0)
+            System.out.println("There are no more sprites!");
+        else
+            sprites[(currentSprites--) - 1] = null;
     }
 
     public void onDrawFrame(GameCanvas canvas, Graphics g, float deltaTime) {
@@ -42,13 +60,15 @@ public class MainCircles extends JFrame {
     }
 
     private void update(GameCanvas canvas, float deltaTime) {
-        for (int i = 0; i < sprites.length; i++) {
+        canvas.changeBackgroundColor(deltaTime);
+        for (int i = 0; i < currentSprites; i++) {
             sprites[i].update(canvas, deltaTime);
         }
     }
 
     private void render(GameCanvas canvas, Graphics g) {
-        for (int i = 0; i < sprites.length; i++) {
+
+        for (int i = 0; i < currentSprites; i++) {
             sprites[i].render(canvas, g);
         }
     }
